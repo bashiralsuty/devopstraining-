@@ -1,0 +1,201 @@
+<odoo>
+	<data>
+		<record id="action_student" model="ir.actions.act_window">
+			<field name="name">Student</field>
+			<field name="res_model">school.student</field>
+			<field name="view_mode">tree,graph,pivot,calendar,form</field>
+		</record>
+		<record id="action_lesson" model="ir.actions.act_window">
+			<field name="name">Lesson</field>
+			<field name="res_model">school.lesson</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<record id="action_subject" model="ir.actions.act_window">
+			<field name="name">Subject</field>
+			<field name="res_model">school.subject</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<record id="action_class_room" model="ir.actions.act_window">
+			<field name="name">Class Room</field>
+			<field name="res_model">school.class.room</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<record id="action_teacher" model="ir.actions.act_window">
+			<field name="name">Teacher</field>
+			<field name="res_model">school.teacher</field>
+			<field name="view_mode">kanban,tree,activity,form</field>
+		</record>
+
+		<record id="action_teacher_hr" model="ir.actions.act_window">
+			<field name="name">Teacher(HR)</field>
+			<field name="res_model">hr.employee</field>
+			<field name="view_mode">kanban,tree,activity,form</field>
+		</record>
+
+		<record id="student_search_id" model="ir.ui.view">
+			<field name="name">Student</field>
+			<field name="model">school.student</field>
+			<field name="arch" type="xml">
+				<search>
+					<field name="name"/>
+					<field name="number"/>
+					<field name="gender"/>
+					<field name="age"/>
+				</search>
+			</field>
+		</record>
+
+		<record id="student_tree_id" model="ir.ui.view">
+			<field name="name">Student</field>
+			<field name="model">school.student</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="number"/>
+					<field name="name"/>
+					<field name="age"/>
+					<field name="gender"/>
+					<field name="is_register"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="student_graph_id" model="ir.ui.view">
+			<field name="name">Student</field>
+			<field name="model">school.student</field>
+			<field name="arch" type="xml">
+				<graph>
+					<field name="name"/>
+					<field name="salary" type="measure"/>
+				</graph>
+			</field>
+		</record>
+
+		<record id="student_pivot" model="ir.ui.view">
+			<field name="name">Student</field>
+			<field name="model">school.student</field>
+			<field name="arch" type="xml">
+				<pivot>
+					<field name="name"/>
+					<field name="salary" type="measure"/>
+				</pivot>
+			</field>
+		</record>
+
+		<record id="student_calendar" model="ir.ui.view">
+			<field name="name">Student</field>
+			<field name="model">school.student</field>
+			<field name="arch" type="xml">
+				<calendar date_start="year" color="name">
+					<field name="name"/>
+				</calendar>
+			</field>
+		</record>
+
+		<record id="student_form" model="ir.ui.view">
+			<field name="name">Student</field>
+			<field name="model">school.student</field>
+			<field name="arch" type="xml">
+				<form>
+					<header>
+
+						<!-- <button name="calc_age" string="Register" type="object" class="oe_button"/> -->
+					<!-- 	<button name="calc_age" string="Un Register" type="object"/>	 -->
+					<button string="Accept" type="object" name="accept" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+
+					<button	string="Rejcet" type="object" name="reject" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+					<button string="Graduate" type="object" name="graduate" attrs="{'invisible': [('state', '!=', 'accept')]}"/>
+					<field name="state" widget="statusbar"/>
+					</header>
+					<sheet>
+
+						<field name="image" widget="image" class="oe_avatar" options="{&quot;zoom&quot;: true, &quot;preview_image&quot;:&quot;image&quot;}"/>
+						<group>
+							<group>
+								<field name="name"/>
+								<field name="number"/>
+								
+								<field name="birth_date"/>
+								
+								<field name="gender"/>
+							</group>
+
+							<group>
+
+								<field name="is_register"/>
+								<field name="year"/>
+								<field name="salary"/>
+								<field name="age"/>
+								
+								<field name="class_id"/>
+							</group>							
+						</group>
+						<notebook>
+							<page string="Description">
+								<field name="description"/>
+							</page>
+							<page string="CV">
+								<field name="cv"/>
+							</page>
+							<page string="Subjects">
+								<field name="subjects"/>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="hr_employee_form_inherit" model="ir.ui.view">
+			<field name="name">hr.employee.form.inherit</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_form"/>
+			<field name="arch" type="xml">
+
+				<field name="parent_id" position="after">
+					<field name="hiring_date" attrs="{'invisible':[('job_degree','=','3')]}"/>
+				</field>
+
+				<!-- <xpath expr="//form/sheet/notebook" position="before">
+					<group>
+						<field name="job_degree"/>
+					</group>
+				</xpath> -->
+
+				<xpath expr="//form/sheet/notebook/page[1]" position="after">
+					<page string="Job Degree">
+						<group>
+							<field name="job_degree"/>
+						</group>
+					</page>
+				</xpath>
+
+				<xpath expr="//form/sheet/notebook" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</xpath>
+
+				<xpath expr="//field[@name='work_phone']" position="attributes">
+					<attribute name="readonly">1</attribute>
+				</xpath>
+
+				<xpath expr="//field[@name='work_phone']" position="replace">
+					<field name="job_degree"/>
+				</xpath>
+
+			</field>
+		</record>
+
+		<menuitem name="School" id="school_root_menu"/>
+		<menuitem name="Student" id="school_student_menu" parent="school_root_menu" action="action_student"/>
+		<menuitem name="Lesson" id="school_lesson_menu" parent="school_root_menu"
+			action="action_lesson"/>
+		<menuitem name="Subject" id="school_subject_menu" parent="school_root_menu"
+			action="action_subject"/>
+		<menuitem name="Class Room" id="school_room_menu" parent="school_root_menu"
+			action="action_class_room"/>
+		<menuitem name="Teacher" id="school_teacher_menu" parent="school_root_menu"
+			action="action_teacher"/>
+
+		<menuitem name="Teacher (HR)" id="school_teacher_hr_menu" parent="school_root_menu"
+			action="action_teacher_hr"/>
+	</data>
+</odoo>
